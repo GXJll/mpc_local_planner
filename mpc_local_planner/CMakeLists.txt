@@ -197,6 +197,7 @@ add_dependencies(mpc_local_planner ${PROJECT_NAME}_gencfg)
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(test_mpc_optim_node src/test_mpc_optim_node.cpp)
+add_executable(trajectory_prediction_node src/trajectory_prediction_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -230,6 +231,11 @@ target_link_libraries(mpc_local_planner
    ${catkin_LIBRARIES}
  )
 
+ target_link_libraries(trajectory_prediction_node
+   mpc_local_planner
+   ${catkin_LIBRARIES}
+ )
+
 #############
 ## Install ##
 #############
@@ -241,6 +247,7 @@ target_link_libraries(mpc_local_planner
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
   scripts/plot_optimal_control_results.py
+  scripts/trajectory_prediction_example.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -248,7 +255,7 @@ install(PROGRAMS
 install(TARGETS mpc_local_planner mpc_local_planner_utils mpc_local_planner_optimal_control
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
-install(TARGETS test_mpc_optim_node
+install(TARGETS test_mpc_optim_node trajectory_prediction_node
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

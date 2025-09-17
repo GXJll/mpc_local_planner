@@ -1,0 +1,20 @@
+<launch>
+
+    <arg name="run_rviz" default="true" />
+    <arg name="run_example" default="true" />
+
+    <!-- Trajectory Prediction Node -->
+    <include file="$(find mpc_local_planner)/launch/trajectory_prediction_node.launch">
+        <arg name="visualization" value="$(arg run_rviz)" />
+    </include>
+
+    <!-- Example Script -->
+    <node pkg="mpc_local_planner" type="trajectory_prediction_example.py" 
+          name="trajectory_prediction_example" output="screen" 
+          if="$(arg run_example)" />
+
+    <!-- Static transform for visualization -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_broadcaster"
+          args="0 0 0 0 0 0 map base_link" />
+
+</launch>
