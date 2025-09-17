@@ -4,6 +4,27 @@ mpc_local_planner ROS Package
 The mpc_local_planner package implements a plugin to the base_local_planner of the 2D navigation stack.
 It provides a generic and versatile model predictive control implementation with minimum-time and quadratic-form receding-horizon configurations.
 
+## 🚀 New: Trajectory Prediction Functionality
+
+This repository now includes dedicated **trajectory prediction ROS nodes** with comprehensive Chinese and English documentation. See [TRAJECTORY_PREDICTION.md](TRAJECTORY_PREDICTION.md) for complete details.
+
+### Quick Start - Trajectory Prediction
+```bash
+# Launch trajectory prediction with visualization
+roslaunch mpc_local_planner trajectory_prediction_demo.launch
+
+# Or just the prediction node
+roslaunch mpc_local_planner trajectory_prediction_node.launch
+```
+
+### Key Features
+- **Real-time trajectory prediction** using MPC
+- **Multiple robot models** (unicycle, car-like, bicycle)
+- **Dynamic obstacle avoidance**
+- **Via-points support**
+- **Interactive RVIZ visualization**
+- **Python examples and utilities**
+
 For custom build instructions (e.g. compilation with other third-party solvers) see [this wiki](https://github.com/rst-tu-dortmund/mpc_local_planner/wiki).
 
 Refer to http://wiki.ros.org/mpc_local_planner for more general information and tutorials.

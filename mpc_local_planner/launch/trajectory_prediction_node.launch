@@ -1,0 +1,31 @@
+<launch>
+
+    <arg name="map_frame" default="map" />
+    <arg name="prediction_rate" default="10.0" />
+    <arg name="auto_predict" default="true" />
+    <arg name="visualization" default="true" />
+
+    <!-- Trajectory Prediction Node -->
+    <node pkg="mpc_local_planner" type="trajectory_prediction_node" name="trajectory_prediction_node" output="screen">
+        
+        <!-- Basic parameters -->
+        <param name="map_frame" value="$(arg map_frame)" />
+        <param name="prediction_rate" value="$(arg prediction_rate)" />
+        <param name="auto_predict" value="$(arg auto_predict)" />
+        
+        <!-- Load MPC controller configuration -->
+        <rosparam file="$(find mpc_local_planner)/cfg/trajectory_prediction_params.yaml" command="load" ns=""/>
+
+        <!-- Footprint model for collision avoidance -->
+        <rosparam param="footprint_model">
+            type: "point"
+        </rosparam>
+
+    </node>
+
+    <!-- RVIZ for visualization -->
+    <node pkg="rviz" type="rviz" name="rviz_trajectory_prediction" 
+          args="-d $(find mpc_local_planner)/cfg/rviz_trajectory_prediction.rviz" 
+          if="$(arg visualization)"/>
+
+</launch>
