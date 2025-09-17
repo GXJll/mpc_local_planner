@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Pedestrian Prediction Node Launch File -->
+  
+  <!-- Node Parameters -->
+  <arg name="node_name" default="pedestrian_predictor" />
+  <arg name="prediction_rate" default="10.0" />
+  <arg name="map_frame" default="map" />
+  <arg name="pedestrian_frame" default="map" />
+  <arg name="config_file" default="$(find pedestrian_prediction)/config/prediction_params.yaml" />
+  
+  <!-- Input Topics -->
+  <arg name="pedestrian_poses_topic" default="/pedestrian_poses" />
+  <arg name="pedestrian_velocities_topic" default="/pedestrian_velocities" />
+  
+  <!-- Output Topics -->
+  <arg name="trajectory_topic" default="/pedestrian_trajectory" />
+  <arg name="trajectories_topic" default="/pedestrian_trajectories" />
+  <arg name="markers_topic" default="/pedestrian_predictions_markers" />
+  
+  <!-- Main Pedestrian Predictor Node -->
+  <node name="$(arg node_name)" pkg="pedestrian_prediction" type="pedestrian_predictor_node" output="screen">
+    
+    <!-- Node Parameters -->
+    <param name="prediction_rate" value="$(arg prediction_rate)" />
+    <param name="map_frame" value="$(arg map_frame)" />
+    <param name="pedestrian_frame" value="$(arg pedestrian_frame)" />
+    
+    <!-- Topic Remapping -->
+    <remap from="pedestrian_poses" to="$(arg pedestrian_poses_topic)" />
+    <remap from="pedestrian_velocities" to="$(arg pedestrian_velocities_topic)" />
+    <remap from="pedestrian_trajectory" to="$(arg trajectory_topic)" />
+    <remap from="pedestrian_trajectories" to="$(arg trajectories_topic)" />
+    <remap from="pedestrian_predictions_markers" to="$(arg markers_topic)" />
+    
+    <!-- Load Parameters from YAML file -->
+    <rosparam file="$(arg config_file)" command="load" />
+    
+  </node>
+  
+  <!-- Optional: Static TF for pedestrian frame if needed -->
+  <!-- 
+  <node pkg="tf2_ros" type="static_transform_publisher" name="pedestrian_frame_publisher"
+        args="0 0 0 0 0 0 $(arg map_frame) $(arg pedestrian_frame)" />
+  -->
+  
+  <!-- Optional: RViz for visualization -->
+  <!-- 
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pedestrian_prediction)/rviz/prediction_visualization.rviz" 
+        if="$(eval arg('launch_rviz'))" />
+  -->
+  
+</launch>
