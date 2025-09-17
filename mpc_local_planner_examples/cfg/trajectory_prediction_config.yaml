@@ -1,0 +1,101 @@
+# Trajectory Prediction Example Configuration
+
+# Robot Configuration
+trajectory_prediction_example:
+  robot:
+    type: "unicycle"  # Options: "unicycle", "simple_car", "kinematic_bicycle_vel_input"
+    
+    # Simple car model parameters
+    simple_car:
+      wheelbase: 0.5
+      front_wheel_driving: false
+      
+    # Kinematic bicycle model parameters  
+    kinematic_bicycle_vel_input:
+      length_rear: 1.0
+      length_front: 1.0
+
+  # Grid configuration for trajectory discretization
+  grid:
+    type: "fd_grid"  # Options: "fd_grid", "variable_fd_grid"
+    n: 20            # Number of discretization points
+    dt: 0.2          # Time step [s]
+    
+    # Variable grid parameters (only used if type is "variable_fd_grid")
+    variable:
+      n_min: 10
+      n_max: 50
+      dt_ref: 0.1
+      dt_hysteresis_ratio: 0.1
+      grid_adapt_strategy: "TimeBasedSingleStep"  # Options: "NoGridAdapt", "TimeBasedSingleStep", "TimeBasedAggressiveEstimate", "SimpleShrinkingHorizon"
+
+  # Controller configuration
+  controller:
+    outer_ocp_iterations: 1
+    force_reinit_new_goal_dist: 1.0
+    force_reinit_new_goal_angular: 1.57
+    allow_init_with_backward_motion: true
+    force_reinit_num_steps: 0
+    prefer_x_feedback: false
+    publish_ocp_results: true
+    print_cpu_time: true
+
+  # Solver configuration
+  solver:
+    type: "ipopt"  # Options: "ipopt", "osqp"
+    
+    # IPOPT solver parameters
+    ipopt:
+      max_cpu_time: 0.04
+      max_iter: 100
+      tol: 1e-4
+      warm_start_init_point: "yes"
+      print_level: 0
+      
+    # OSQP solver parameters (for quadratic problems)
+    osqp:
+      max_iter: 4000
+      eps_abs: 1e-3
+      eps_rel: 1e-3
+      verbose: false
+
+  # Cost function configuration
+  cost:
+    # Quadratic cost function weights
+    quadratic:
+      # State cost weights [x, y, theta]
+      state_weights: [2.0, 2.0, 2.0]
+      # Control cost weights [v, w]
+      control_weights: [0.1, 0.1]
+      # Terminal state cost weights
+      terminal_weights: [10.0, 10.0, 10.0]
+      
+    # Minimum time cost (if enabled)
+    minimum_time:
+      weight: 1.0
+      
+  # Constraints
+  constraints:
+    # Control input bounds
+    control_bounds:
+      # Linear velocity bounds [m/s]
+      v_min: -2.0
+      v_max: 2.0
+      # Angular velocity bounds [rad/s]
+      w_min: -2.0
+      w_max: 2.0
+      
+    # State bounds
+    state_bounds:
+      # Position bounds [m] (optional, set large values to disable)
+      x_min: -100.0
+      x_max: 100.0
+      y_min: -100.0
+      y_max: 100.0
+
+  # Visualization settings
+  visualization:
+    publish_trajectory: true
+    publish_controls: true
+    trajectory_color: [0.0, 1.0, 0.0, 0.8]  # RGBA
+    control_scale: 0.3
