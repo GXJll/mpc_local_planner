@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Trajectory Prediction Example Launch File -->
+  
+  <!-- Arguments -->
+  <arg name="robot_type" default="unicycle" doc="Robot type: unicycle, simple_car, kinematic_bicycle_vel_input"/>
+  <arg name="interactive" default="false" doc="Run in interactive mode (wait for RViz goals)"/>
+  <arg name="config_file" default="$(find mpc_local_planner_examples)/cfg/trajectory_prediction_config.yaml"/>
+  
+  <!-- Load configuration parameters -->
+  <rosparam file="$(arg config_file)" command="load"/>
+  
+  <!-- Set robot type parameter -->
+  <param name="trajectory_prediction_example/robot_type" value="$(arg robot_type)"/>
+  
+  <!-- Launch the trajectory prediction example -->
+  <node name="trajectory_prediction_example" 
+        pkg="mpc_local_planner_examples" 
+        type="trajectory_prediction_example" 
+        output="screen">
+    
+    <!-- Pass interactive argument -->
+    <param name="interactive" value="$(arg interactive)"/>
+    
+    <!-- Remap topics -->
+    <remap from="predicted_path" to="/trajectory_prediction/predicted_path"/>
+    <remap from="predicted_trajectory" to="/trajectory_prediction/predicted_trajectory"/>
+    <remap from="cmd_vel" to="/trajectory_prediction/cmd_vel"/>
+    <remap from="move_base_simple/goal" to="/move_base_simple/goal"/>
+  </node>
+  
+  <!-- Launch RViz for visualization if in interactive mode -->
+  <group if="$(arg interactive)">
+    <node name="rviz" 
+          pkg="rviz" 
+          type="rviz" 
+          args="-d $(find mpc_local_planner_examples)/cfg/trajectory_prediction_rviz.rviz"
+          output="screen"/>
+  </group>
+  
+  <!-- Static transform for visualization (map -> odom -> base_link) -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom"
+        args="0 0 0 0 0 0 map odom"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="odom_to_base_link"
+        args="0 0 0 0 0 0 odom base_link"/>
+        
+</launch>
