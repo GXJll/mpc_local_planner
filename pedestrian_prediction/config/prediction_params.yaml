@@ -1,0 +1,86 @@
+# Pedestrian Prediction Parameters Configuration
+
+# Frame Parameters
+map_frame: "map"
+pedestrian_frame: "map"
+
+# State Management
+state_timeout: 5.0  # Time in seconds after which pedestrian states are considered stale
+
+# Visualization
+publish_markers: true
+
+# Node Operation
+prediction_rate: 10.0  # Hz - Rate at which predictions are generated and published
+
+# NPSN (Neural Pedestrian Social Network) Algorithm Parameters
+npsn:
+  # Prediction Horizon
+  prediction_horizon: 3.0    # Time horizon for predictions in seconds
+  time_step: 0.1            # Time step for discretization in seconds
+  
+  # Social Interaction Parameters
+  social_radius: 5.0        # Radius within which pedestrians influence each other (meters)
+  comfort_zone: 1.2         # Personal space radius for repulsion forces (meters)
+  social_force: 1.5         # Weight for social interaction forces
+  
+  # Motion Constraints
+  max_velocity: 2.0         # Maximum pedestrian velocity in m/s
+  min_velocity: 0.1         # Minimum pedestrian velocity in m/s (for moving pedestrians)
+  
+  # Force Weights
+  goal_attraction: 1.0      # Weight for goal attraction force
+  obstacle_repulsion: 2.0   # Weight for obstacle repulsion force
+  
+  # History and Memory
+  history_length: 10        # Number of historical poses to keep for each pedestrian
+
+# Advanced NPSN Parameters (for future enhancement)
+advanced_npsn:
+  # Neural Network Parameters
+  hidden_layers: [64, 32]   # Hidden layer sizes for neural network
+  learning_rate: 0.001      # Learning rate for training
+  batch_size: 32           # Batch size for training
+  
+  # Feature Engineering
+  use_velocity_features: true      # Include velocity in feature set
+  use_acceleration_features: false # Include acceleration in feature set
+  use_social_features: true        # Include social interaction features
+  use_environmental_features: false # Include environmental context features
+  
+  # Uncertainty Quantification
+  enable_uncertainty: true         # Enable uncertainty estimation
+  monte_carlo_samples: 100        # Number of MC samples for uncertainty
+  
+  # Multi-modal Prediction
+  num_modes: 3                    # Number of prediction modes (future paths)
+  mode_probability_threshold: 0.1  # Minimum probability for considering a mode
+
+# Visualization Parameters
+visualization:
+  marker_lifetime: 1.0      # Lifetime of visualization markers in seconds
+  trajectory_color:         # RGB color for trajectory visualization
+    r: 0.0
+    g: 1.0
+    b: 0.0
+    a: 0.8
+  trajectory_width: 0.05    # Width of trajectory lines in meters
+  
+  # Uncertainty Visualization
+  show_uncertainty: true    # Show uncertainty ellipses
+  uncertainty_color:
+    r: 1.0
+    g: 1.0
+    b: 0.0
+    a: 0.5
+
+# Performance Parameters
+performance:
+  max_pedestrians: 50       # Maximum number of pedestrians to track simultaneously
+  prediction_timeout: 0.1   # Maximum time allowed for prediction computation (seconds)
+  
+# Debug Parameters
+debug:
+  verbose_logging: false    # Enable verbose logging for debugging
+  publish_debug_info: false # Publish additional debug information
+  log_prediction_time: false # Log computation time for predictions
